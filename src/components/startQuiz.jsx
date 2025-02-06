@@ -113,7 +113,7 @@ const StartQuiz = () => {
         </h2>
 
         <h3 className="font-medium text-lg text-right mr-4">
-          Marks: {marks}
+          Marks: {currentQuestion.marks}
         </h3>
 
         <div className="bg-slate-200 text-lg font-semibold mb-4 p-4 rounded-lg shadow-md">

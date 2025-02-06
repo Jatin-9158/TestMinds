@@ -17,6 +17,7 @@ const TeacherDashboard = () => {
   const [fileName, setFileName] = useState("");
   const [isGenerateQuiz, setIsGenerateQuiz] = useState(false);
   const [message, setMessage] = useState("");
+  const [ErrorMessage,setErrorMessage] = useState("");
   const navigate = useNavigate();
   const emailId = useSelector((store) => store.user.email);
 
@@ -82,46 +83,109 @@ const TeacherDashboard = () => {
     const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINIAI_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `You are an AI that processes quiz data. Convert the following text into a structured JSON format containing questions, answer choices, marks, and correct answers.  
-        
-        ⚠️ **Important Rules:**  
-        1. **Do NOT generate any response** if marks are missing for any question.  
-        2. **Do NOT assume or modify** any missing fields—return an error instead.  
-        3. **If data is unclear or invalid, return an null re without attempting corrections.  
-        4. **Ensure questions are properly structured** before processing.  
-        
-        📌 **Example Input:**  
-        1. What is the capital of France? (1 mark)  
-           a) Berlin  
-           b) Madrid  
-           c) Paris  
-           d) Rome  
-        
-        ✅ **Expected JSON Output:**  
-        [
-          {
-            "question": "What is the capital of France?",
-            "marks": 1,
-            "options": ["Berlin", "Madrid", "Paris", "Rome"],
-            "correct_answer": "Paris"
-          }
-        ]
-        
-        Now, process the following quiz data and return a properly formatted JSON output.  
-        **Return only JSON (without code blocks).**  
-        
-        If any ambiguity or missing marks is found, **return an error immediately** without making any assumptions.  
-        
-        📌 **Input:**  
-        ${text} ${message}
-         `;
+    const prompt = `You are an AI that processes quiz data from PDFs and messages. Convert the following quiz data into a structured JSON format containing questions, answer choices, marks, and correct answers.
+
+⚠️ **Strict Rules:**  
+1. **If the message specifies "Marks each question X marks and no of question Y marks", apply the specified marks (X) to each question and ensure the total number of questions is Y.**  
+2. **If any question is missing marks, and the message specifies "Marks each question X marks", apply X marks to those questions.**  
+3. **If the message specifies "No of Questions should be X", validate the count of questions.** If the number of questions does not match, do the following:  
+    - If the message specifies a certain number of questions (e.g., "Number of questions should be 20"), and the number of questions is less than expected, automatically generate the missing questions based on the content of the PDF.  
+    - Assign marks as specified in the message for each question.  
+    - If the number of questions exceeds the specified value, trim the extra questions accordingly.  
+4. **Ensure all options are properly framed and clearly separated.**  
+5. **Return only JSON (without code blocks).**  
+
+📌 **Example Input (Message: Marks each question 20 marks and no of question 20 marks):**  
+**Message**: "Marks each question 20 marks and no of question 20 marks"  
+1. What is the capital of France?  
+   a) Berlin  
+   b) Madrid  
+   c) Paris  
+   d) Rome  
+
+✅ **Expected JSON Output:**  
+[
+  {
+    "question": "What is the capital of France?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Paris"
+  },
+  {
+    "question": "What is the capital of Spain?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Madrid"
+  },
+  ...
+  {
+    "question": "What is the capital of Italy?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Rome"
+  }
+]
+
+📌 **Example Input (Incorrect Number of Questions):**  
+**Message**: "Marks each question 20 marks and no of question 20 marks"  
+**Quiz contains only 18 questions**  
+
+If the number of questions is less than 20, automatically generate 2 additional questions and assign 20 marks to each:
+
+✅ **Expected JSON Output (Automatically Generated Questions):**  
+[
+  {
+    "question": "What is the capital of France?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Paris"
+  },
+  {
+    "question": "What is the capital of Spain?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Madrid"
+  },
+  ...
+  {
+    "question": "What is the capital of Italy?",
+    "marks": 20,
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correct_answer": "Rome"
+  }
+]
+
+📌 **Example Input (Missing Marks, and No Marks Specified in Message):**  
+1. What is the capital of France?  
+   a) Berlin  
+   b) Madrid  
+   c) Paris  
+   d) Rome  
+
+❌ **Expected JSON Output:**  
+\`{ "error": "Marks missing in one or more questions." }\`
+
+Now, process the following quiz data and return **only JSON**.  
+
+📌 **Input:**  
+${text} ${message}
+
+
+`;
+
+    
 
     try {
       const result = await model.generateContent(prompt);
       const rawText = await result.response.text();
       const cleanQuizData = rawText.replace(/```json|```/g, "").trim();
       const quizData = JSON.parse(cleanQuizData);
-      console.log(quizData);
+      console.log(quizData)
+      if(quizData?.error)
+      {
+         setErrorMessage(quizData.error);
+         return;
+      }
 
       const quizId = await generateQuizId();
       await addDoc(collection(db, "quizzes"), {
@@ -145,7 +209,7 @@ const TeacherDashboard = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="relative h-3/4 w-1/2 mt-10 bg-white opacity-90 shadow-lg rounded-lg p-6 flex flex-col gap-4">
+      <div className="relative h-4/5 w-1/2 mt-16 bg-white opacity-90 shadow-lg rounded-lg p-6 flex flex-col gap-4">
         <h2 className="text-xl text-center font-medium text-gray-700">
           Upload PDF to Create Quiz
         </h2>
@@ -163,8 +227,11 @@ const TeacherDashboard = () => {
         >
           {isGenerateQuiz ? "Generating ..." : "Generate a Quiz"}
         </button>
-
-        <div className="mt-8">
+        {
+          ErrorMessage && 
+          <h1 className="text-red-600 text-base text-center">{`${ErrorMessage}`}</h1>
+        }
+        <div className="mt-4">
           <label
             htmlFor="message"
             className="block text-sm font-medium text-gray-700 mb-2"
@@ -191,7 +258,7 @@ const TeacherDashboard = () => {
             </li>
           </ul>
         </div>
-
+        
         <textarea
           id="message"
           value={message}
