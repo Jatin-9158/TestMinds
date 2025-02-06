@@ -15,7 +15,6 @@ const Body = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/browse" element={<Browse />} />
       <Route path="/profile" element={<UserProfile />} />
       <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
       <Route path="/dashboard/student" element={<StudentDashboard />} />
