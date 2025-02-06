@@ -85,7 +85,7 @@ const TeacherDashboard = () => {
 
     const prompt = `You are an AI that processes quiz data from PDFs and messages. Convert the following quiz data into a structured JSON format containing questions, answer choices, marks, and correct answers.
 
-⚠️ **Strict Rules:**  
+**Strict Rules:**   
 1. **If the message specifies "Marks each question X marks and no of question Y marks", apply the specified marks (X) to each question and ensure the total number of questions is Y.**  
 2. **If any question is missing marks, and the message specifies "Marks each question X marks", apply X marks to those questions.**  
 3. **If the message specifies "No of Questions should be X", validate the count of questions.** If the number of questions does not match, do the following:  
@@ -95,7 +95,7 @@ const TeacherDashboard = () => {
 4. **Ensure all options are properly framed and clearly separated.**  
 5. **Return only JSON (without code blocks).**  
 
-📌 **Example Input (Message: Marks each question 20 marks and no of question 20 marks):**  
+ **Example Input (Message: Marks each question 20 marks and no of question 20 marks):**   
 **Message**: "Marks each question 20 marks and no of question 20 marks"  
 1. What is the capital of France?  
    a) Berlin  
@@ -103,7 +103,7 @@ const TeacherDashboard = () => {
    c) Paris  
    d) Rome  
 
-✅ **Expected JSON Output:**  
+ **Expected JSON Output:**   
 [
   {
     "question": "What is the capital of France?",
@@ -126,13 +126,13 @@ const TeacherDashboard = () => {
   }
 ]
 
-📌 **Example Input (Incorrect Number of Questions):**  
+ **Example Input (Incorrect Number of Questions):**   
 **Message**: "Marks each question 20 marks and no of question 20 marks"  
 **Quiz contains only 18 questions**  
 
 If the number of questions is less than 20, automatically generate 2 additional questions and assign 20 marks to each:
 
-✅ **Expected JSON Output (Automatically Generated Questions):**  
+ **Expected JSON Output (Automatically Generated Questions):**   
 [
   {
     "question": "What is the capital of France?",
@@ -155,21 +155,19 @@ If the number of questions is less than 20, automatically generate 2 additional 
   }
 ]
 
-📌 **Example Input (Missing Marks, and No Marks Specified in Message):**  
+ **Example Input (Missing Marks, and No Marks Specified in Message):**   
 1. What is the capital of France?  
    a) Berlin  
    b) Madrid  
    c) Paris  
    d) Rome  
 
-❌ **Expected JSON Output:**  
+ **Expected JSON Output:**   
 \`{ "error": "Marks missing in one or more questions." }\`
 
-Now, process the following quiz data and return **only JSON**.  
-
-📌 **Input:**  
+Now, process the following quiz data and return **only JSON**.                                         
+ **Input:**   
 ${text} ${message}
-
 
 `;
 
