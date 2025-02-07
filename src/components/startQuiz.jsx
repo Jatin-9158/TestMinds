@@ -1,6 +1,6 @@
 import { collection, addDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { db } from '../utils/firebaseConfig';
+import { db,auth } from '../utils/firebaseConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 import useQuizData from '../hooks/useQuizData';
 import { motion } from 'framer-motion';
@@ -105,28 +105,28 @@ const StartQuiz = () => {
     navigate(`/quiz/${quizId}/submit`);
   };
 
-  return (
+  return ( auth?.currentUser && (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white relative h-3/4 w-2/5 mt-14 rounded-lg opacity-85 shadow-xl p-6">
-        <h2 className="text-xl font-bold text-center mt-2 mb-4 text-gray-800">
+      <div className="bg-white relative h-auto w-5/6 md:w-2/5 mt-10 md:mt-14 rounded-md md:rounded-lg opacity-85 shadow-xl p-6">
+        <h2 className="text-lg md:text-xl font-extrabold md:font-bold text-center mt-2 mb-4 text-gray-800">
           Quiz ID: {quizId}
         </h2>
 
-        <h3 className="font-medium text-lg text-right mr-4">
+        <h3 className="font-bold md:font-medium text-base md:text-lg text-right mr-4">
           Marks: {currentQuestion.marks}
         </h3>
 
-        <div className="bg-slate-200 text-lg font-semibold mb-4 p-4 rounded-lg shadow-md">
+        <div className="bg-slate-200 text-base font-bold md:text-lg md:font-semibold mb-4 p-2 md:p-4 rounded-sm md:rounded-md shadow-md">
           {`${currentQuestionIndex + 1}. ${currentQuestion.question}`}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2 md:space-y-3">
           {currentQuestion.options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleSelectedOption(option)}
               disabled={answers[currentQuestionIndex] !== undefined}
-              className={`w-full py-3 px-4 rounded-md border border-gray-300 
+              className={`w-full font-semibold py-2 md:py-3 px-4 rounded-sm md:rounded-md border border-gray-300 
               transition duration-300 ease-in-out shadow-sm 
               ${
                 selectedOption === option
@@ -155,7 +155,7 @@ const StartQuiz = () => {
 
         <div className="flex justify-between mt-4 mx-2">
           <button
-            className={`px-6 py-2 rounded-md shadow-lg text-white transition duration-300 
+            className={`px-6 py-2 rounded-sm md:rounded-md shadow-lg text-white transition duration-300 
                       ${
                         currentQuestionIndex === 0
                           ? "bg-gray-500 cursor-not-allowed"
@@ -168,7 +168,7 @@ const StartQuiz = () => {
           </button>
 
           <button
-            className={`px-6 py-2 rounded-md shadow-lg text-white transition duration-300 
+            className={`px-6 py-2 rounded-sm md:rounded-md shadow-lg text-white transition duration-300 
                       ${
                         currentQuestionIndex === quiz.questions.length - 1
                           ? "bg-gray-500 cursor-not-allowed"
@@ -193,7 +193,7 @@ const StartQuiz = () => {
         )}
       </div>
     </div>
-  );
+  ));
 };
 
 export default StartQuiz;

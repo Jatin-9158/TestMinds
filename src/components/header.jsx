@@ -49,7 +49,7 @@ const Header = () => {
             <h6 className="text-center">My Profile</h6>
           </div>
           <button
-            className="w-24 text-white bg-blue-500 mr-8 py-4 rounded-md font-semibold text-md text-pretty"
+            className="w-24  text-white bg-blue-500 mr-8 px-4 py-2 md:py-4 rounded-md font-semibold  text-pretty"
             onClick={handleLogout}
           >
             Logout

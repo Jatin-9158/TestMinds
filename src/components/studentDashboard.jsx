@@ -4,6 +4,7 @@ import { db } from "../utils/firebaseConfig";
 import {query,collection,where,getDocs} from "firebase/firestore"
 import {  useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { auth } from "../utils/firebaseConfig";
 const StudentDashboard = () => {
   const [quizId, setquizId] = useState(["", "", "", "", ""]);
   const [error,setError] = useState("");
@@ -61,9 +62,10 @@ const StudentDashboard = () => {
 
   }
 
-  return (
+  return 
+  (auth?.currentUser&&(
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="relative h-2/5 w-1/4 mt-10 bg-white opacity-90 shadow-lg rounded-lg  flex  flex-col">
+      <div className="relative h-[35vh]   md:h-2/5 md:w-1/4 md:mt-10 bg-white opacity-90 shadow-lg rounded-sm md:rounded-lg  flex  flex-col">
        <h1 className="font-bold text-center mt-8 text-xl">Enter the Quiz Code</h1>
        <div className="flex  justify-center gap-2">
        {quizId.map((digit, index) => (
@@ -84,7 +86,7 @@ const StudentDashboard = () => {
       </div>
 
     </div>
-  );
+  ));
 };
 
 export default StudentDashboard;

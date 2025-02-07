@@ -163,12 +163,11 @@ If the number of questions is less than 20, automatically generate 2 additional 
    d) Rome  
 
  **Expected JSON Output:**   
-\`{ "error": "Marks missing in one or more questions." }\`
+{ "error": "Marks missing in one or more questions." }
 
 Now, process the following quiz data and return **only JSON**.                                         
  **Input:**   
 ${text} ${message}
-
 `;
 
     
@@ -206,9 +205,10 @@ ${text} ${message}
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="relative h-4/5 w-1/2 mt-16 bg-white opacity-90 shadow-lg rounded-lg p-6 flex flex-col gap-4">
-        <h2 className="text-xl text-center font-medium text-gray-700">
+    auth?.currentUser && (
+      <div className="flex items-center justify-center  h-screen bg-gray-100">
+      <div className="relative h-auto w-[45vh] md:h-4/5 md:w-1/2 mt-14 md:mt-20 bg-white opacity-90 shadow-lg rounded-sm md:rounded-lg p-6 flex flex-col gap-4">
+        <h2 className="text-xl md:text-2xl text-center font-medium text-gray-700">
           Upload PDF to Create Quiz
         </h2>
         <div className="flex justify-center mt-6">
@@ -216,11 +216,11 @@ ${text} ${message}
             type="file"
             accept="application/pdf"
             onChange={handleFileUpload}
-            className="py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className=" md:py-2 md:px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
         <button
-          className="text-white bg-blue-500 px-4 mx-64 py-3 mt-6 rounded-xl shadow-lg hover:bg-blue-600 transition duration-200"
+          className="text-white bg-blue-500 px-3 font-semibold md:font-normal md:px-4 mx-auto py-2 md:py-3 mt-6 rounded-md md:rounded-lg shadow-lg hover:bg-blue-600 transition duration-200"
           onClick={handleClickQuiz}
         >
           {isGenerateQuiz ? "Generating ..." : "Generate a Quiz"}
@@ -232,11 +232,11 @@ ${text} ${message}
         <div className="mt-4">
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-base md:text-lg font-medium text-gray-700 mb-2"
           >
             Instructions for Teacher:
           </label>
-          <ul className="list-inside list-disc text-sm text-gray-600 space-y-1">
+          <ul className="list-inside  list-disc text-sm text-gray-600 space-y-1">
             <li>Upload a PDF file containing quiz content.</li>
             <li>
               Ensure the PDF is well-structured with clear questions and
@@ -264,10 +264,11 @@ ${text} ${message}
           disabled={isGenerateQuiz}
           placeholder="Type your message here."
           rows="4"
-          className="w-full p-3 mt-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          className="w-full p-3 mt-4 border border-gray-300 rounded-sm md:rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         />
       </div>
     </div>
+    )
   );
 };
 

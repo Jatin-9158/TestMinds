@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./login";
 import SignUp from "./signUp";
-import UserProfile from "./userProfile";
 import QuizPage from "./quizPage";
 import TeacherDashboard from "./teacherDashboard";
 import StudentDashboard from "./studentDashboard";
@@ -14,7 +13,6 @@ const Body = () => {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/profile" element={<UserProfile />} />
       <Route path="/dashboard/teacher" element={<TeacherDashboard />} />
       <Route path="/dashboard/student" element={<StudentDashboard />} />
       <Route path="/quiz/:quizId" element={<QuizPage />} />
