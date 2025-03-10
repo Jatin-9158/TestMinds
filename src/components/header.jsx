@@ -5,29 +5,23 @@ import { signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { logout } from "../utils/userSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import { FaUserCircle } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/signup") {
-      signOut(auth).then(()=>{
-
-      })
-      .catch(()=>{
-        
-      })
+      signOut(auth)
+        .then(() => {})
+        .catch(() => {});
       dispatch(logout());
     }
   }, [location, dispatch]);
 
-
-  const handleProfile = () => {
-    navigate("/profile");
-  };
 
   const handleLogout = async () => {
     try {
@@ -37,27 +31,37 @@ const Header = () => {
     } catch (error) {
       alert("Logout Error");
     }
+    setMenuOpen(false);
   };
 
   return (
     <div className="absolute flex justify-between items-center w-full md:px-10 rounded-sm shadow-lg bg-gradient-to-br bg-white md:py-3 bg-opacity-35">
       <img className="w-48 md:w-52 mt-2 z-10" src={Logo} alt="logo" />
       {auth?.currentUser && (
-        <div className="flex gap-10">
-          <div className="flex flex-col justify-center items-center" onClick={handleProfile}>
-            <FaUserCircle className="text-4xl" />
-            <h6 className="text-center">My Profile</h6>
-          </div>
+        <>
           <button
-            className="w-24  text-white bg-blue-500 mr-8 px-4 py-2 md:py-4 rounded-md font-semibold  text-pretty"
-            onClick={handleLogout}
+            className="md:hidden text-2xl p-2 focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            Logout
+            {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
-        </div>
-      ) }
+          <div
+            className={`${
+              menuOpen ? "flex" : "hidden"
+            } md:flex flex-col md:flex-row gap-6 absolute md:relative top-16 right-4 md:top-0 md:right-0 bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0 rounded-md`}
+          >
+           
+            <button
+              className="w-24 text-white bg-blue-500 px-4 py-2 md:py-4 rounded-md font-semibold"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 };
 
 export default Header;

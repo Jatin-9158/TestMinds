@@ -12,7 +12,7 @@ const Submit = () => {
   };
 
   return (
-    auth?.currentUser( <div className="flex items-center justify-center h-screen bg-gray-100">
+    auth?.currentUser && ( <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="h-[30vh] w-[40vh] md:h-[40vh] md:w-[50vh] -mt-8 md:mt-0 md:p-10 bg-white rounded-sm md:rounded-md shadow-md flex flex-col p-6 border border-gray-300">
         <h3 className="text-center text-lg font-bold md:text-xl md:font-semibold text-gray-800">
           {`Your Score: ${marks}`}
