@@ -6,7 +6,8 @@ import { db } from "../utils/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.mjs`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
 
 
 const TeacherDashboard = () => {
@@ -202,7 +203,7 @@ ${text} ${message}
   };
 
   return (
-    auth?.currentUser && (
+     (
       <div className="flex items-center justify-center  h-screen bg-gray-100">
       <div className="relative h-auto w-[45vh] md:h-4/5 md:w-1/2 mt-14 md:mt-20 bg-white opacity-90 shadow-lg rounded-sm md:rounded-lg p-6 flex flex-col gap-4">
         <h2 className="text-xl md:text-2xl text-center font-medium text-gray-700">
