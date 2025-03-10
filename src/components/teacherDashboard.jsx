@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
+  `https://test-minds.vercel.app/pdf.worker.min.mjs`,
+
   import.meta.url
 ).toString();
 
