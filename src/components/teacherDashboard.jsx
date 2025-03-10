@@ -3,15 +3,11 @@ import { useState } from "react";
 import { auth } from "../utils/firebaseConfig";
 import { collection, where, query, getDocs, addDoc } from "firebase/firestore";
 import { db } from "../utils/firebaseConfig";
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import * as pdfjsLib from "pdfjs-dist/build/pdf";
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.mjs`;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  `https://test-minds.vercel.app/pdf.worker.min.mjs`,
-
-  import.meta.url
-).toString();
 
 const TeacherDashboard = () => {
   const [text, setText] = useState("");
