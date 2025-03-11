@@ -20,7 +20,7 @@ const StartQuiz = () => {
   const [answers, setAnswers] = useState({});
 
   const studentEmail = useSelector((store) => store.user.email);
-
+  
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

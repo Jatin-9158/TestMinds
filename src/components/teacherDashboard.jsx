@@ -73,7 +73,7 @@ const TeacherDashboard = () => {
 
   const handleGenerateQuiz = async () => {
     if (!text) {
-      console.log("No text extracted from PDF");
+      setErrorMessage("No text extracted from PDF");
       return;
     }
 
